@@ -1,0 +1,36 @@
+{
+  "name": "memories-box",
+  "version": "1.0.0",
+  "description": "memories box",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "comment_microservice": "nodemon comments-microservice/server.js"
+  },
+  "keywords": [],
+  "author": "dreywesson",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "memories_schemas_and_middleware": "^1.1.1",
+    "mongoose": "^5.11.13",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.4.17",
+    "pusher": "^4.0.2",
+    "swagger-jsdoc": "^6.0.6",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DreyWesson/memories-microservice.git"
+  }
+}

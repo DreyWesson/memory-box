@@ -1,0 +1,99 @@
+version: "3"
+services:
+  user-microservice:
+    container_name: user-microservice
+    restart: always
+    build:
+      context: ./user-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./user-microservice:/app
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      EMAIL_SERVICE: ${EMAIL_SERVICE}
+      EMAIL_USERNAME: ${EMAIL_USERNAME}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      EMAIL_FROM: ${EMAIL_FROM}
+      KEY: ${KEY}
+      SECRET: ${SECRET}
+      APP_ID: ${APP_ID}
+    networks:
+      - memory_box-app
+
+  post-microservice:
+    container_name: post-microservice
+    restart: always
+    build:
+      context: ./post-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./post-microservice:/app
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      KEY: ${KEY}
+      SECRET: ${SECRET}
+      APP_ID: ${APP_ID}
+    networks:
+      - memory_box-app
+
+  comments-microservice:
+    container_name: comments-microservice
+    restart: always
+    build:
+      context: ./comments-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./comments-microservice:/app
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      KEY: ${KEY}
+      SECRET: ${SECRET}
+      APP_ID: ${APP_ID}
+    networks:
+      - memory_box-app
+
+  frontend:
+    container_name: memories-frontend
+    restart: always
+    stdin_open: true
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    environment:
+      REACT_APP_CLIENT_ID: ${CLIENT_ID}
+    # args:
+    #   REACT_APP_CLIENT_ID: ${CLIENT_ID}
+    networks:
+      - memory_box-app
+    # depends_on:
+    #   - user-microservice
+    #   - post-microservice
+    #   - comments-microservice
+
+  nginx:
+    restart: always
+    depends_on:
+      - user-microservice
+      - post-microservice
+      - comments-microservice
+      - frontend
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8080:80
+    networks:
+      - memory_box-app
+
+networks:
+  memory_box-app:
+    driver: bridge
